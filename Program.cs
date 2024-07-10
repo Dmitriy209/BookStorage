@@ -22,8 +22,6 @@ namespace BookStorage
             _books = CreateBooks();
         }
 
-        private int _size => _books.Count;
-
         public void Work()
         {
             const string CommandShowAllBooks = "1";
@@ -193,7 +191,7 @@ namespace BookStorage
 
         private void DeleteBook()
         {
-            if (_size == 0)
+            if (_books.Count == 0)
             {
                 Console.WriteLine("Библиотека пуста.");
             }
