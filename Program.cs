@@ -22,7 +22,7 @@ namespace BookStorage
             _books = CreateBooks();
         }
 
-        public int Size => _books.Count;
+        private int _size => _books.Count;
 
         public void Work()
         {
@@ -88,12 +88,12 @@ namespace BookStorage
         {
             List<Book> books = new List<Book>();
 
-            books.Add( new Book(GetId(), "Анна Каренина", new Author("Толстой", "Лев", "Николаевич"), 2023));
-            books.Add( new Book(GetId(), "Евгений Онегин", new Author("Пушкин", "Александр", "Сергеевич"), 1950));
-            books.Add( new Book(GetId(), "Братья Карамазовы", new Author("Достоевсикй", "Фёдор", "Михайлович"), 1984));
-            books.Add( new Book(GetId(), "Чайка", new Author("Чехов", "Антон", "Павлович"), 2012));
-            books.Add( new Book(GetId(), "Доктор Живаго", new Author("Пастернак", "Борис", "Леонидович"), 2016));
-            books.Add( new Book(GetId(), "Война и мир", new Author("Толстой", "Лев", "Николаевич"), 2006));
+            books.Add( new Book(GetBookId(), "Анна Каренина", new Author("Толстой", "Лев", "Николаевич"), 2023));
+            books.Add( new Book(GetBookId(), "Евгений Онегин", new Author("Пушкин", "Александр", "Сергеевич"), 1950));
+            books.Add( new Book(GetBookId(), "Братья Карамазовы", new Author("Достоевсикй", "Фёдор", "Михайлович"), 1984));
+            books.Add( new Book(GetBookId(), "Чайка", new Author("Чехов", "Антон", "Павлович"), 2012));
+            books.Add( new Book(GetBookId(), "Доктор Живаго", new Author("Пастернак", "Борис", "Леонидович"), 2016));
+            books.Add( new Book(GetBookId(), "Война и мир", new Author("Толстой", "Лев", "Николаевич"), 2006));
 
             return books;
         }
@@ -105,7 +105,7 @@ namespace BookStorage
 
         private Book ReadBook()
         {
-            int id = GetId();
+            int id = GetBookId();
             int yearRelease;
 
             string name;
@@ -119,7 +119,7 @@ namespace BookStorage
                 Console.WriteLine("Введите название книги:");
                 name = Console.ReadLine();
 
-                author = ReadAuthor();
+                author = CreateAuthor();
 
                 yearRelease = ReadYear();
 
@@ -140,7 +140,7 @@ namespace BookStorage
             return Console.ReadLine() != commandExit;
         }
 
-        private Author ReadAuthor()
+        private Author CreateAuthor()
         {
             Console.WriteLine("Введите фамилию:");
             string lastname = Console.ReadLine();
@@ -193,7 +193,7 @@ namespace BookStorage
 
         private void DeleteBook()
         {
-            if (Size == 0)
+            if (_size == 0)
             {
                 Console.WriteLine("Библиотека пуста.");
             }
@@ -206,18 +206,18 @@ namespace BookStorage
             }
         }
 
-        private bool TryGetBookById(out Book book)
+        private bool TryGetBookById(out Book foundBook)
         {
-            book = null;
+            foundBook = null;
 
             Console.WriteLine("Введите идентификатор:");
             int id = ReadInt();
 
-            foreach (var item in _books)
+            foreach (var book in _books)
             {
-                if (id == item.Id)
+                if (id == book.Id)
                 {
-                    book = item;
+                    foundBook = book;
                     return true;
                 }
             }
@@ -303,11 +303,11 @@ namespace BookStorage
             Console.WriteLine("Введите название книги:");
             string name = Console.ReadLine();
 
-            foreach (var item in _books)
+            foreach (var book in _books)
             {
-                if (name.ToLower() == item._name.ToLower())
+                if (name.ToLower() == book.Name.ToLower())
                 {
-                    books.Add(item);
+                    books.Add(book);
                     isFound = true;
                 }
             }
@@ -327,11 +327,11 @@ namespace BookStorage
             Console.WriteLine("Введите фамилию автора:");
             string lastname = Console.ReadLine();
 
-            foreach (var item in _books)
+            foreach (var book in _books)
             {
-                if (lastname.ToLower() == item._author._lastname.ToLower())
+                if (lastname.ToLower() == book.Author.Lastname.ToLower())
                 {
-                    books.Add(item);
+                    books.Add(book);
                     isFound = true;
                 }
             }
@@ -350,11 +350,11 @@ namespace BookStorage
 
             int year = ReadYear();
 
-            foreach (var item in _books)
+            foreach (var book in _books)
             {
-                if (year == item._yearRelease)
+                if (year == book.YearRelease)
                 {
-                    books.Add(item);
+                    books.Add(book);
                     isFound = true;
                 }
             }
@@ -365,7 +365,7 @@ namespace BookStorage
             return isFound;
         }
 
-        private int GetId()
+        private int GetBookId()
         {
             return _lastBookId++;
         }
@@ -381,19 +381,19 @@ namespace BookStorage
         public Book(int id, string name, Author author, int yearRelease)
         {
             Id = id;
-            _name = name;
-            _author = author;
-            _yearRelease = yearRelease;
+            Name = name;
+            Author = author;
+            YearRelease = yearRelease;
         }
 
-        public string _name { get; private set; }
-        public Author _author { get; private set; }
-        public int _yearRelease { get; private set; }
+        public string Name { get; private set; }
+        public Author Author { get; private set; }
+        public int YearRelease { get; private set; }
         public int Id { get; private set; }
 
         public void ShowStats(string separator = "-")
         {
-            Console.WriteLine($"{Id}{separator}{_name}{separator}{_author.GetFullName()}{separator}{_yearRelease}");
+            Console.WriteLine($"{Id}{separator}{Name}{separator}{Author.GetFullName()}{separator}{YearRelease}");
         }
     }
 
@@ -404,17 +404,17 @@ namespace BookStorage
 
         public Author(string lastname, string firstname, string surname)
         {
-            _lastname = lastname;
+            Lastname = lastname;
             _firstname = firstname;
             _surname = surname;
         }
 
-        public string _lastname { get; private set; }
+        public string Lastname { get; private set; }
 
         public string GetFullName()
         {
             string separator = " - ";
-            string fullName = $"{_lastname}{separator}{_firstname}{separator}{_surname}";
+            string fullName = $"{Lastname}{separator}{_firstname}{separator}{_surname}";
 
             return fullName;
         }
