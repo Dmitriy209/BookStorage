@@ -329,7 +329,7 @@ namespace BookStorage
 
             foreach (var item in _books)
             {
-                if (lastname.ToLower() == item.Author._lastname.ToLower())
+                if (lastname.ToLower() == item._author._lastname.ToLower())
                 {
                     books.Add(item);
                     isFound = true;
@@ -352,7 +352,7 @@ namespace BookStorage
 
             foreach (var item in _books)
             {
-                if (year == item.YearRelease)
+                if (year == item._yearRelease)
                 {
                     books.Add(item);
                     isFound = true;
@@ -378,9 +378,6 @@ namespace BookStorage
 
     class Book
     {
-        private Author _author;
-        private int _yearRelease;
-
         public Book(int id, string name, Author author, int yearRelease)
         {
             Id = id;
@@ -390,11 +387,8 @@ namespace BookStorage
         }
 
         public string _name { get; private set; }
-
-        public Author Author => _author;
-
-        public int YearRelease => _yearRelease;
-
+        public Author _author { get; private set; }
+        public int _yearRelease { get; private set; }
         public int Id { get; private set; }
 
         public void ShowStats(string separator = "-")
